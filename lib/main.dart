@@ -9,9 +9,10 @@ class CalculatorApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Basic Calculator',
+      title: 'Fancy Calculator',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.green,
+        scaffoldBackgroundColor: Colors.white,
       ),
       home: CalculatorScreen(),
     );
@@ -38,6 +39,12 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
         } catch (e) {
           result = 'Error';
         }
+      } else if (buttonText == '.') {
+        if (!input.contains('.')) {
+          input += buttonText;
+        }
+      } else if (buttonText == '⌫' && input.isNotEmpty) {
+        input = input.substring(0, input.length - 1);
       } else {
         input += buttonText;
       }
@@ -56,55 +63,93 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Basic Calculator'),
+        title: Text('Fancy Calculator'),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
-            input,
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          Container(
+            padding: EdgeInsets.all(16.0),
+            decoration: BoxDecoration(
+              color: Colors.grey[200],
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            child: Column(
+              children: [
+                Text(
+                  input,
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+                SizedBox(height: 20),
+                Text(
+                  result,
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+              ],
+            ),
           ),
           SizedBox(height: 20),
-          Text(
-            result,
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-          ),
-          SizedBox(height: 20),
+          // Adjusted button style with custom colors
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              buildButton('7'),
-              buildButton('8'),
-              buildButton('9'),
-              buildButton('/'),
+              buildButton('.', Colors.green),
+              buildButton('0', Colors.green),
+              buildButton('=', Colors.green),
+              buildButton('⌫', Colors.orange),
             ],
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              buildButton('4'),
-              buildButton('5'),
-              buildButton('6'),
-              buildButton('*'),
+              buildButton('1', Colors.green),
+              buildButton('2', Colors.green),
+              buildButton('3', Colors.green),
+              buildButton('+', Colors.green),
             ],
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              buildButton('1'),
-              buildButton('2'),
-              buildButton('3'),
-              buildButton('-'),
+              buildButton('4', Colors.green),
+              buildButton('5', Colors.green),
+              buildButton('6', Colors.green),
+              buildButton('-', Colors.green),
             ],
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              buildButton('0'),
-              buildButton('C'),
-              buildButton('='),
-              buildButton('+'),
+              buildButton('7', Colors.green),
+              buildButton('8', Colors.green),
+              buildButton('9', Colors.green),
+              buildButton('*', Colors.green),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              buildButton('(', Colors.green),
+              buildButton(')', Colors.green),
+              buildButton('!', Colors.green),
+              buildButton('/', Colors.green),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              buildButton('%', Colors.green),
+              buildButton('x²', Colors.green),
+              buildButton('√', Colors.green),
+              buildButton('C', Colors.red),
             ],
           ),
         ],
@@ -112,14 +157,24 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     );
   }
 
-  Widget buildButton(String buttonText) {
+  Widget buildButton(String buttonText, Color buttonColor) {
     return ElevatedButton(
       onPressed: () {
         _onButtonPressed(buttonText);
       },
+      style: ElevatedButton.styleFrom(
+        primary: buttonColor,
+        padding: EdgeInsets.all(20.0),
+        shape: CircleBorder(),
+        minimumSize: buttonText == '0' ? Size(70.0, 70.0) : null, // Adjust minimum size for '0'
+      ),
       child: Text(
         buttonText,
-        style: TextStyle(fontSize: 20),
+        style: TextStyle(
+          fontSize: buttonText == '=' ? 20 : 24,
+          fontWeight: buttonText == '=' ? FontWeight.bold : FontWeight.normal,
+          color: buttonText == '=' ? Colors.white : Colors.black,
+        ),
       ),
     );
   }
